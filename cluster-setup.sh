@@ -1,5 +1,8 @@
 #!/bin/bash
 echo "This script create deployments for cluster"
+aws eks --region eu-central-1 update-kubeconfig --name Task11-EKS
+helm repo add secrets-store-csi-driver "https://raw.githubusercontent.com/kubernetes-sigs/secrets-store-csi-driver/master/charts"
+helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver
 echo "Configuring parameter store access..."
 REGION=eu-central-1
 CLUSTERNAME=Task11-EKS
@@ -16,7 +19,7 @@ eksctl create iamserviceaccount --name nginx-deployment-sa --region="$REGION" --
 echo "Create deployment, hpa, etc.."
 kubectl create -f /home/ubuntu/PlaysDev-Final/Cluster/SecretProviderClass.yaml
 echo "SPC Created!"
-kubectl create -f /home/ubuntu/PlaysDev-Final/Cluster/Deployment.yaml
+kubectl create -f /home/ubuntu/PlaysDev-Final/Cluster/worked-deployment.yaml
 echo "Deployment created"
 kubectl create -f /home/ubuntu/PlaysDev-Final/Cluster/HPA.yaml
 echo "HPA created"
