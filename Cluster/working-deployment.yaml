@@ -1,0 +1,48 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: public.ecr.aws/s4z6a2u8/custom-ubuntu-nginx:latest
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /var/www/html/cpu.html
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /index.html
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
