@@ -1,0 +1,61 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: custom-ubuntu-nginx
+  labels:
+    app: nginx
+spec:
+  selector:
+    app: nginx
+  type: NodePort
+  ports:
+  - targetPort: 80
+    port: 80
+    nodePort: 30080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: custom-ubuntu-nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      serviceAccountName: nginx-deployment-sa
+      volumes:
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "nginx-deployment-aws-secrets"
+      containers:
+      - name: nginx-deployment
+        image: public.ecr.aws/s4z6a2u8/custom-ubuntu-nginx:latest
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /var/www/html/cpu.html
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /index.html
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        volumeMounts:
+        - name: secrets-store-inline
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
