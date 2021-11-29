@@ -1,4 +1,3 @@
-echo "Aww shit, here we go again"
 echo "This script create deployments for cluster"
 aws eks --region eu-central-1 update-kubeconfig --name Task11-EKS
 helm repo add secrets-store-csi-driver "https://raw.githubusercontent.com/kubernetes-sigs/secrets-store-csi-driver/master/charts"
