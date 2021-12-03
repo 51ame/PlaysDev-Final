@@ -4,7 +4,7 @@ aws eks --region eu-central-1 update-kubeconfig --name Task11-EKS
 helm repo add secrets-store-csi-driver "https://raw.githubusercontent.com/kubernetes-sigs/secrets-store-csi-driver/master/charts"
 helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver
 kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-provider-aws/main/deployment/aws-provider-installer.yaml
-echo "Configuring parameter store access..."
+
 REGION=eu-central-1
 CLUSTERNAME=Task11-EKS
 POLICY_ARN=arn:aws:iam::316986010667:policy/nginx-parameter-deployment-policy
