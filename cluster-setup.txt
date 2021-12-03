@@ -26,3 +26,11 @@ kubectl create -f /home/ubuntu/PlaysDev-Final/Cluster/Deployment.yaml
 echo "Deployment created"
 kubectl create -f /home/ubuntu/PlaysDev-Final/Cluster/HPA.yaml
 echo "HPA created"
+
+# Install monitoring
+
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+helm upgrade --install loki grafana/loki-stack  --set grafana.enabled=true,prometheus.enabled=true,prometheus.alertmanager.persistentVolume.enabled=false,prometheus.server.persistentVolume.enabled=false
+
+# Пароль от графаны kubectl get secret  loki-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
