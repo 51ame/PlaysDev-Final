@@ -11,7 +11,7 @@ spec:
     name: custom-ubuntu-nginx
   minReplicas: 1
   maxReplicas: 5
-  targetCPUUtilizationPercentage: 15
+  targetCPUUtilizationPercentage: 50
 
 
 ---
@@ -34,4 +34,4 @@ spec:
       name: memory 
       target:
         type: Utilization 
-        averageValue: 8Gi 
+        averageValue: 8Mi 
